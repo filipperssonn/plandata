@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { FileSpreadsheet, FileText, Loader2 } from "lucide-react"
+import { FileSpreadsheet, FileText, FileDown, Loader2 } from "lucide-react"
 
 interface ExportButtonsProps {
   projectId: string
@@ -12,7 +12,7 @@ interface ExportButtonsProps {
 export function ExportButtons({ projectId, projectName }: ExportButtonsProps) {
   const [loading, setLoading] = useState<string | null>(null)
 
-  const handleExport = async (format: "excel" | "csv") => {
+  const handleExport = async (format: "excel" | "csv" | "pdf") => {
     setLoading(format)
     try {
       const response = await fetch(`/api/export/${format}?projectId=${projectId}`)
@@ -25,7 +25,13 @@ export function ExportButtons({ projectId, projectName }: ExportButtonsProps) {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `${projectName.replace(/\s+/g, "_")}_analys.${format === "excel" ? "xlsx" : "csv"}`
+
+      const extensions: Record<string, string> = {
+        excel: "xlsx",
+        csv: "csv",
+        pdf: "pdf"
+      }
+      a.download = `${projectName.replace(/\s+/g, "_")}_analys.${extensions[format]}`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -40,6 +46,18 @@ export function ExportButtons({ projectId, projectName }: ExportButtonsProps) {
 
   return (
     <div className="flex flex-wrap gap-2">
+      <Button
+        variant="outline"
+        onClick={() => handleExport("pdf")}
+        disabled={loading !== null}
+      >
+        {loading === "pdf" ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <FileDown className="mr-2 h-4 w-4" />
+        )}
+        PDF
+      </Button>
       <Button
         variant="outline"
         onClick={() => handleExport("excel")}

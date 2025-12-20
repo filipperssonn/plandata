@@ -10,6 +10,7 @@ export const SITE_CONFIG = {
 export const NAV_ITEMS: NavItem[] = [
   { label: "Funktioner", href: "/#features" },
   { label: "Priser", href: "/#pricing" },
+  { label: "FAQ", href: "/#faq" },
 ]
 
 export const HERO = {
@@ -125,9 +126,8 @@ export const PRICING_PLANS: PricingPlan[] = [
     period: "månad",
     features: [
       "100 ritningar per månad",
-      "Team-funktioner (3 användare)",
+      "Alla fördelar från Pro-planen",
       "Prioriterad support",
-      "API-access (beta)",
     ],
     cta: "Välj Business",
   },

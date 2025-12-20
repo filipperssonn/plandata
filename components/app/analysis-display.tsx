@@ -6,6 +6,7 @@ import {
   Maximize,
   Ruler,
   Square,
+  DoorClosed,
 } from "lucide-react"
 import type { AnalysisResult, Room } from "@/types"
 
@@ -23,7 +24,18 @@ const roomTypeLabels: Record<Room["type"], string> = {
   other: "Övrigt",
 }
 
+// Extract door types from raw_data
+function getDoorTypes(rawData: Record<string, unknown>) {
+  return {
+    inner: (rawData.doors_inner as number) || 0,
+    balcony: (rawData.doors_balcony as number) || 0,
+    exterior: (rawData.doors_exterior as number) || 0,
+  }
+}
+
 export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
+  const doorTypes = getDoorTypes(analysis.raw_data)
+
   const stats = [
     {
       label: "Total yta",
@@ -71,7 +83,7 @@ export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
       </div>
 
       {/* Openings */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -79,7 +91,7 @@ export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                   <Maximize className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                 </div>
-                <span className="text-sm font-medium">Fönster</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">Fönster</span>
               </div>
               <span className="text-2xl font-bold text-slate-900 dark:text-white">
                 {analysis.windows}
@@ -87,6 +99,8 @@ export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
             </div>
           </CardContent>
         </Card>
+
+        {/* Door Types */}
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -94,10 +108,51 @@ export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
                 <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                   <DoorOpen className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                 </div>
-                <span className="text-sm font-medium">Dörrar</span>
+                <div>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">Innerdörrar</span>
+                  <p className="text-xs text-muted-foreground">Mellan rum</p>
+                </div>
               </div>
               <span className="text-2xl font-bold text-slate-900 dark:text-white">
-                {analysis.doors}
+                {doorTypes.inner}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <DoorClosed className="h-4 w-4 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">Balkongdörr</span>
+                  <p className="text-xs text-muted-foreground">Till balkong</p>
+                </div>
+              </div>
+              <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                {doorTypes.balcony}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <DoorOpen className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">Ytterdörr</span>
+                  <p className="text-xs text-muted-foreground">Utgång</p>
+                </div>
+              </div>
+              <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                {doorTypes.exterior}
               </span>
             </div>
           </CardContent>

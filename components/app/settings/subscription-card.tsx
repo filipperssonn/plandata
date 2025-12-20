@@ -1,70 +1,83 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Loader2, ExternalLink, CreditCard, Check } from "lucide-react"
-import type { Subscription } from "@/types"
-import { PRICING_PLANS } from "@/lib/constants"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Loader2,
+  ExternalLink,
+  CreditCard,
+  Check,
+  AlertTriangle,
+} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import type { Subscription } from "@/types";
+import { PRICING_PLANS } from "@/lib/constants";
 
 interface SubscriptionCardProps {
-  subscription: Subscription
+  subscription: Subscription;
 }
 
 export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
-  const [loading, setLoading] = useState<string | null>(null)
+  const [loading, setLoading] = useState<string | null>(null);
 
-  const currentPlan = PRICING_PLANS.find((p) => p.id === subscription.plan_id)
+  const currentPlan = PRICING_PLANS.find((p) => p.id === subscription.plan_id);
   const upgradePlans = PRICING_PLANS.filter(
     (p) => p.price > (currentPlan?.price || 0)
-  )
+  );
 
   const handleUpgrade = async (planId: string) => {
-    setLoading(planId)
+    setLoading(planId);
     try {
       const response = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planId }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.url) {
-        window.location.href = data.url
+        window.location.href = data.url;
       } else {
-        throw new Error(data.error || "Checkout failed")
+        throw new Error(data.error || "Checkout failed");
       }
     } catch (error) {
-      console.error("Upgrade error:", error)
-      alert("Kunde inte starta betalning. Försök igen.")
+      console.error("Upgrade error:", error);
+      alert("Kunde inte starta betalning. Försök igen.");
     } finally {
-      setLoading(null)
+      setLoading(null);
     }
-  }
+  };
 
   const handleManageBilling = async () => {
-    setLoading("portal")
+    setLoading("portal");
     try {
       const response = await fetch("/api/stripe/portal", {
         method: "POST",
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.url) {
-        window.location.href = data.url
+        window.location.href = data.url;
       } else {
-        throw new Error(data.error || "Portal failed")
+        throw new Error(data.error || "Portal failed");
       }
     } catch (error) {
-      console.error("Portal error:", error)
-      alert("Kunde inte öppna faktureringsportalen. Försök igen.")
+      console.error("Portal error:", error);
+      alert("Kunde inte öppna faktureringsportalen. Försök igen.");
     } finally {
-      setLoading(null)
+      setLoading(null);
     }
-  }
+  };
 
   return (
     <Card>
@@ -86,7 +99,12 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             <h4 className="text-lg font-medium text-slate-900 dark:text-white">
               Nuvarande plan
             </h4>
-            <Badge variant={subscription.plan_id === "free" ? "secondary" : "default"} className="text-sm px-3 py-1">
+            <Badge
+              variant={
+                subscription.plan_id === "free" ? "secondary" : "default"
+              }
+              className="text-sm px-3 py-1"
+            >
               {currentPlan?.name}
             </Badge>
           </div>
@@ -97,7 +115,10 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
           </p>
           <div className="space-y-2">
             {currentPlan?.features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-3 text-base">
+              <div
+                key={index}
+                className="flex items-center gap-3 text-base text-slate-900 dark:text-slate-200"
+              >
                 <Check className="h-5 w-5 text-green-500" />
                 <span>{feature}</span>
               </div>
@@ -124,8 +145,9 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
                 }}
               />
             </div>
-            <span className="text-base font-medium">
-              {subscription.monthly_uploads_used}/{subscription.monthly_uploads_limit} uploads
+            <span className="text-base font-medium text-slate-900 dark:text-white">
+              {subscription.monthly_uploads_used}/
+              {subscription.monthly_uploads_limit} uploads
             </span>
           </div>
         </div>
@@ -143,7 +165,9 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
                   className="p-5 border border-slate-200 dark:border-slate-700 rounded-xl"
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-lg font-medium">{plan.name}</span>
+                    <span className="text-lg font-medium text-slate-900 dark:text-white">
+                      {plan.name}
+                    </span>
                     <span className="text-base text-muted-foreground">
                       {plan.price} kr/mån
                     </span>
@@ -167,22 +191,55 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
 
         {/* Manage Billing */}
         {subscription.stripe_customer_id && (
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={handleManageBilling}
-            disabled={loading !== null}
-            className="w-full sm:w-auto text-base"
-          >
-            {loading === "portal" ? (
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            ) : (
-              <ExternalLink className="mr-2 h-5 w-5" />
-            )}
-            Hantera fakturering
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={handleManageBilling}
+              disabled={loading !== null}
+              className="text-base"
+            >
+              {loading === "portal" ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <ExternalLink className="mr-2 h-5 w-5" />
+              )}
+              Hantera fakturering
+            </Button>
+          </div>
         )}
+
+        {/* Cancel Subscription */}
+        {subscription.plan_id !== "free" &&
+          subscription.stripe_subscription_id && (
+            <div className="pt-6 border-t border-slate-200 dark:border-slate-700">
+              <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-3">
+                Avsluta prenumeration
+              </h4>
+              <Alert className="mb-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
+                <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                <AlertDescription className="text-amber-800 dark:text-amber-200">
+                  Om du avslutar din prenumeration kommer du att behålla
+                  tillgång till din nuvarande plan fram till slutet av
+                  faktureringsperioden. Därefter återgår ditt konto till
+                  gratisplanen.
+                </AlertDescription>
+              </Alert>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleManageBilling}
+                disabled={loading !== null}
+                className="text-base text-red-600 dark:text-red-400 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300"
+              >
+                {loading === "portal" && (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                )}
+                Avsluta prenumeration
+              </Button>
+            </div>
+          )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -13,6 +13,7 @@ import { createClient } from "@/lib/supabase/client"
 
 export default function NewProjectPage() {
   const [projectName, setProjectName] = useState("")
+  const [scale, setScale] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -91,11 +92,14 @@ export default function NewProjectPage() {
         throw fileRecordError
       }
 
-      // Trigger mock analysis
+      // Trigger AI analysis
       await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId: project.id }),
+        body: JSON.stringify({
+          projectId: project.id,
+          scale: scale.trim() || undefined
+        }),
       })
 
       // Redirect to project page
@@ -118,7 +122,7 @@ export default function NewProjectPage() {
         </p>
       </div>
 
-      <Card className="max-w-2xl">
+      <Card>
         <CardHeader className="p-8 pb-4">
           <CardTitle className="text-xl">Projektinformation</CardTitle>
           <CardDescription className="text-base">
@@ -143,6 +147,23 @@ export default function NewProjectPage() {
                 disabled={isUploading}
                 className="h-12 text-base"
               />
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="scale" className="text-base">
+                Skala <span className="text-muted-foreground font-normal">(valfritt)</span>
+              </Label>
+              <Input
+                id="scale"
+                value={scale}
+                onChange={(e) => setScale(e.target.value)}
+                placeholder="T.ex. 1:100"
+                disabled={isUploading}
+                className="h-12 text-base"
+              />
+              <p className="text-sm text-muted-foreground">
+                Om du anger skalan kan AI:n beräkna exakta ytor. Lämna tomt för automatisk detektering.
+              </p>
             </div>
 
             <div className="space-y-3">

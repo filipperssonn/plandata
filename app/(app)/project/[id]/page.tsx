@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { AnalysisDisplay } from "@/components/app/analysis-display"
 import { ExportButtons } from "@/components/app/export-buttons"
+import { ProjectStatusPoller } from "@/components/app/project-status-poller"
 import { ArrowLeft, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react"
 import type { Project, AnalysisResult } from "@/types"
 
@@ -61,6 +62,8 @@ export default async function ProjectPage({
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
+      <ProjectStatusPoller projectId={id} status={typedProject.status} />
+
       <Link
         href="/dashboard"
         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
@@ -105,7 +108,7 @@ export default async function ProjectPage({
         <Card>
           <CardContent className="py-12 text-center">
             <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">Väntar på analys</h3>
+            <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Väntar på analys</h3>
             <p className="text-muted-foreground">
               Din ritning väntar på att analyseras. Detta tar normalt under en minut.
             </p>
@@ -117,7 +120,7 @@ export default async function ProjectPage({
         <Card>
           <CardContent className="py-12 text-center">
             <Loader2 className="h-12 w-12 mx-auto text-primary mb-4 animate-spin" />
-            <h3 className="text-lg font-medium mb-2">Analyserar ritning...</h3>
+            <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Analyserar ritning...</h3>
             <p className="text-muted-foreground">
               AI:n identifierar rum, fönster, dörrar och beräknar ytor. Snart klar!
             </p>
@@ -129,7 +132,7 @@ export default async function ProjectPage({
         <Card>
           <CardContent className="py-12 text-center">
             <XCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Analysen misslyckades</h3>
+            <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Analysen misslyckades</h3>
             <p className="text-muted-foreground mb-4">
               Något gick fel vid analysen. Kontrollera att ritningen är tydlig och i rätt format.
             </p>

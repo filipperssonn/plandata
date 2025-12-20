@@ -7,7 +7,8 @@
       "Bash(npx tailwindcss:*)",
       "Bash(timeout 5 bash:*)",
       "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(xargs cat:*)"
     ]
   }
 }

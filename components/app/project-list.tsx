@@ -1,8 +1,12 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { FolderOpen, Plus, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react"
+import { FolderOpen, Plus, Clock, CheckCircle, XCircle, Loader2, Trash2 } from "lucide-react"
 import type { Project } from "@/types"
 
 interface ProjectListProps {
@@ -17,6 +21,36 @@ const statusConfig = {
 }
 
 export function ProjectList({ projects }: ProjectListProps) {
+  const router = useRouter()
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  const handleDelete = async (e: React.MouseEvent, projectId: string, projectName: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!confirm(`Är du säker på att du vill ta bort "${projectName}"? Detta kan inte ångras.`)) {
+      return
+    }
+
+    setDeletingId(projectId)
+    try {
+      const response = await fetch(`/api/project/${projectId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete project")
+      }
+
+      router.refresh()
+    } catch (error) {
+      console.error("Delete error:", error)
+      alert("Kunde inte ta bort projektet. Försök igen.")
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   if (projects.length === 0) {
     return (
       <Card>
@@ -57,6 +91,7 @@ export function ProjectList({ projects }: ProjectListProps) {
           {projects.map((project) => {
             const status = statusConfig[project.status]
             const StatusIcon = status.icon
+            const isDeleting = deletingId === project.id
 
             return (
               <Link
@@ -82,10 +117,25 @@ export function ProjectList({ projects }: ProjectListProps) {
                       </p>
                     </div>
                   </div>
-                  <Badge variant={status.variant} className="flex items-center gap-1.5 text-sm px-3 py-1">
-                    <StatusIcon className={`h-4 w-4 ${project.status === "processing" ? "animate-spin" : ""}`} />
-                    {status.label}
-                  </Badge>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={status.variant} className="flex items-center gap-1.5 text-sm px-3 py-1">
+                      <StatusIcon className={`h-4 w-4 ${project.status === "processing" ? "animate-spin" : ""}`} />
+                      {status.label}
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      onClick={(e) => handleDelete(e, project.id, project.name)}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </Link>
             )

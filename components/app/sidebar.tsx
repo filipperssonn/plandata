@@ -30,14 +30,14 @@ export function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200",
+                  "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 ease-out",
                   isActive
-                    ? "bg-primary text-white shadow-md shadow-primary/25"
-                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-primary-700/20 dark:hover:text-primary-100 hover:shadow-md"
+                    ? "bg-primary text-white shadow-md shadow-primary/25 scale-[1.02]"
+                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-primary-700/20 dark:hover:text-primary-100 hover:shadow-md hover:scale-[1.01]"
                 )}
               >
                 <item.icon className={cn(
-                  "h-5 w-5 transition-colors",
+                  "h-5 w-5 transition-all duration-300 ease-out",
                   isActive ? "text-white" : "text-slate-500 dark:text-slate-400"
                 )} />
                 <span className="font-medium">{item.name}</span>

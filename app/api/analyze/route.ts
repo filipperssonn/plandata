@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
-import { generateMockAnalysis } from "@/lib/services/mock-analysis"
+import { analyzeBlueprint } from "@/lib/services/ai-analysis"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
   try {
-    const { projectId } = await request.json()
+    const { projectId, scale } = await request.json()
 
     if (!projectId) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     const { data: project } = await supabase
       .from("projects")
-      .select("*")
+      .select("*, project_files(*)")
       .eq("id", projectId)
       .eq("user_id", user.id)
       .single()
@@ -35,19 +35,50 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
 
+    // Get the first file (blueprint)
+    const projectFile = project.project_files?.[0]
+    if (!projectFile) {
+      return NextResponse.json(
+        { error: "No file found for this project" },
+        { status: 400 }
+      )
+    }
+
     // Update project status to processing
     await supabase
       .from("projects")
       .update({ status: "processing" })
       .eq("id", projectId)
 
-    // Simulate processing delay (1-2 seconds)
-    await new Promise((resolve) =>
-      setTimeout(resolve, Math.random() * 1000 + 1000)
-    )
+    // Download the file from Supabase Storage
+    const { data: fileData, error: downloadError } = await supabase.storage
+      .from("blueprints")
+      .download(projectFile.storage_path)
 
-    // Generate mock analysis
-    const analysis = generateMockAnalysis()
+    if (downloadError || !fileData) {
+      await supabase
+        .from("projects")
+        .update({ status: "failed" })
+        .eq("id", projectId)
+      return NextResponse.json(
+        { error: "Could not download file" },
+        { status: 500 }
+      )
+    }
+
+    // Convert blob to buffer
+    const arrayBuffer = await fileData.arrayBuffer()
+    const fileBuffer = Buffer.from(arrayBuffer)
+
+    // Determine MIME type
+    const mimeType = projectFile.file_type || "application/pdf"
+
+    // Analyze the blueprint using Gemini AI
+    const analysis = await analyzeBlueprint({
+      fileBuffer,
+      mimeType,
+      scale
+    })
 
     // Save analysis results
     const { error: analysisError } = await supabase
