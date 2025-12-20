@@ -4,11 +4,12 @@ import Link from "next/link"
 interface LogoProps {
   variant?: "full" | "icon"
   className?: string
+  href?: string
 }
 
-export function Logo({ variant = "full", className = "" }: LogoProps) {
+export function Logo({ variant = "full", className = "", href = "/" }: LogoProps) {
   return (
-    <Link href="/" className={`inline-block ${className}`}>
+    <Link href={href} className={`inline-block ${className}`}>
       {variant === "full" ? (
         <Image
           src="/plandata-logo.svg"

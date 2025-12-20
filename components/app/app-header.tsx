@@ -1,8 +1,7 @@
-import Link from "next/link"
-import { Logo } from "@/components/shared/logo"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { UserNav } from "./user-nav"
 import { MobileNav } from "./mobile-nav"
+import { Logo } from "@/components/shared/logo"
 import type { Profile, Subscription } from "@/types"
 
 interface AppHeaderProps {
@@ -16,9 +15,7 @@ export function AppHeader({ profile, subscription }: AppHeaderProps) {
       <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <MobileNav />
-          <Link href="/dashboard">
-            <Logo />
-          </Link>
+          <Logo href="/dashboard" />
         </div>
 
         <div className="flex items-center gap-2">

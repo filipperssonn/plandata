@@ -30,11 +30,12 @@ export function UserNav({ profile, subscription }: UserNavProps) {
       </div>
 
       <div className="flex items-center gap-2">
-        <Link href="/settings">
-          <Button variant="ghost" size="icon" className="h-9 w-9">
-            <Settings className="h-4 w-4" />
-            <span className="sr-only">Inställningar</span>
-          </Button>
+        <Link
+          href="/settings"
+          className="inline-flex items-center justify-center h-9 w-9 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Settings className="h-4 w-4" />
+          <span className="sr-only">Inställningar</span>
         </Link>
 
         <form action={signOut}>
