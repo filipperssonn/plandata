@@ -8,26 +8,34 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
 
-  if (!user) {
+    // Om autentisering misslyckas eller användare saknas, redirecta till login
+    if (authError || !user) {
+      redirect("/login")
+    }
+
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+        <Sidebar />
+        <main className="pt-16">
+          <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 lg:pl-60">
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </div>
+        </main>
+      </div>
+    )
+  } catch (error) {
+    // Om något går fel, redirecta till login
+    console.error("Error in AppLayout:", error)
     redirect("/login")
   }
-
-  return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      <Sidebar />
-      <main className="pt-16">
-        <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 lg:pl-60">
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </div>
-      </main>
-    </div>
-  )
 }
