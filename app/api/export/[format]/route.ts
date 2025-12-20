@@ -4,6 +4,8 @@ import { generateCSV } from "@/lib/services/export-csv"
 import { NextResponse } from "next/server"
 import type { AnalysisResult, Project } from "@/types"
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ format: string }> }
