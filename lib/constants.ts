@@ -8,8 +8,8 @@ export const SITE_CONFIG = {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Funktioner", href: "#features" },
-  { label: "Priser", href: "#pricing" },
+  { label: "Funktioner", href: "/#features" },
+  { label: "Priser", href: "/#pricing" },
 ]
 
 export const HERO = {

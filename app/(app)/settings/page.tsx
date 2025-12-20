@@ -64,20 +64,20 @@ export default async function SettingsPage({
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-10">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3">
           Inställningar
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-lg text-muted-foreground">
           Hantera ditt konto, prenumeration och preferenser
         </p>
       </div>
 
       {params.success && (
         <Alert variant="success">
-          <Check className="h-4 w-4" />
-          <AlertDescription>
+          <Check className="h-5 w-5" />
+          <AlertDescription className="text-base">
             Din prenumeration har uppdaterats! Tack för ditt stöd.
           </AlertDescription>
         </Alert>
@@ -85,14 +85,14 @@ export default async function SettingsPage({
 
       {params.canceled && (
         <Alert>
-          <X className="h-4 w-4" />
-          <AlertDescription>
+          <X className="h-5 w-5" />
+          <AlertDescription className="text-base">
             Betalningen avbröts. Ingen ändring har gjorts.
           </AlertDescription>
         </Alert>
       )}
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         <ProfileForm profile={userProfile} />
         <SubscriptionCard subscription={userSubscription} />
       </div>

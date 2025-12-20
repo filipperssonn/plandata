@@ -33,17 +33,17 @@ export function StatsCards({ totalProjects, subscription }: StatsCardsProps) {
   ]
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-3">
       {stats.map((stat) => (
         <Card key={stat.name}>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                <stat.icon className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+          <CardContent className="p-8">
+            <div className="flex items-center gap-5">
+              <div className="p-3 bg-primary-50 dark:bg-primary-700/20 rounded-xl">
+                <stat.icon className="h-7 w-7 text-primary dark:text-primary-100" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{stat.name}</p>
-                <p className="text-2xl font-semibold text-slate-900 dark:text-white">
+                <p className="text-base text-muted-foreground">{stat.name}</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-white">
                   {stat.value}
                 </p>
               </div>

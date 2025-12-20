@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { FileUpload } from "@/components/app/file-upload"
-import { Loader2, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { Loader2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
 export default function NewProjectPage() {
@@ -109,43 +108,45 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-6"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Tillbaka till dashboard
-      </Link>
+    <div className="max-w-6xl mx-auto space-y-10">
+      <div>
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3">
+          Nytt projekt
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Ladda upp en ritning för att analysera den med AI
+        </p>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Nytt projekt</CardTitle>
-          <CardDescription>
-            Ladda upp en ritning för att analysera den med AI
+      <Card className="max-w-2xl">
+        <CardHeader className="p-8 pb-4">
+          <CardTitle className="text-xl">Projektinformation</CardTitle>
+          <CardDescription className="text-base">
+            Fyll i projektnamn och ladda upp din ritning
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="p-8 pt-4">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {error && (
               <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="text-base">{error}</AlertDescription>
               </Alert>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="projectName">Projektnamn</Label>
+            <div className="space-y-3">
+              <Label htmlFor="projectName" className="text-base">Projektnamn</Label>
               <Input
                 id="projectName"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 placeholder="T.ex. Villa Andersson"
                 disabled={isUploading}
+                className="h-12 text-base"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label>Ritning</Label>
+            <div className="space-y-3">
+              <Label className="text-base">Ritning</Label>
               <FileUpload
                 onFileSelect={setSelectedFile}
                 isUploading={isUploading}
@@ -154,12 +155,13 @@ export default function NewProjectPage() {
 
             <Button
               type="submit"
-              className="w-full"
+              size="lg"
+              className="w-full text-base h-12"
               disabled={isUploading || !projectName.trim() || !selectedFile}
             >
               {isUploading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Laddar upp och analyserar...
                 </>
               ) : (

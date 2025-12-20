@@ -48,59 +48,62 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <User className="h-5 w-5" />
+      <CardHeader className="p-8 pb-4">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <div className="p-2 bg-primary-50 dark:bg-primary-700/20 rounded-xl">
+            <User className="h-6 w-6 text-primary dark:text-primary-100" />
+          </div>
           Profil
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-base">
           Uppdatera din profilinformation
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <CardContent className="p-8 pt-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
             <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription className="text-base">{error}</AlertDescription>
             </Alert>
           )}
 
           {success && (
             <Alert variant="success">
-              <Check className="h-4 w-4" />
-              <AlertDescription>Profilen har uppdaterats!</AlertDescription>
+              <Check className="h-5 w-5" />
+              <AlertDescription className="text-base">Profilen har uppdaterats!</AlertDescription>
             </Alert>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="email">E-post</Label>
+          <div className="space-y-3">
+            <Label htmlFor="email" className="text-base">E-post</Label>
             <Input
               id="email"
               type="email"
               value={profile.email}
               disabled
-              className="bg-slate-50 dark:bg-slate-800"
+              className="h-12 text-base bg-slate-50 dark:bg-slate-800"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               E-postadressen kan inte ändras
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="fullName">Namn</Label>
+          <div className="space-y-3">
+            <Label htmlFor="fullName" className="text-base">Namn</Label>
             <Input
               id="fullName"
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Ditt namn"
+              className="h-12 text-base"
             />
           </div>
 
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" size="lg" className="text-base" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Sparar...
               </>
             ) : (

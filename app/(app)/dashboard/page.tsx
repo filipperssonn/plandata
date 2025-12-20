@@ -66,12 +66,12 @@ export default async function DashboardPage() {
   const userProjects: Project[] = projects || []
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-10">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3">
           Välkommen{userProfile.full_name ? `, ${userProfile.full_name.split(" ")[0]}` : ""}!
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-lg text-muted-foreground">
           Här är en översikt av dina projekt och din användning
         </p>
       </div>

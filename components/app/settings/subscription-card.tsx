@@ -68,35 +68,37 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CreditCard className="h-5 w-5" />
+      <CardHeader className="p-8 pb-4">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <div className="p-2 bg-primary-50 dark:bg-primary-700/20 rounded-xl">
+            <CreditCard className="h-6 w-6 text-primary dark:text-primary-100" />
+          </div>
           Prenumeration
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-base">
           Hantera din plan och fakturering
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="p-8 pt-4 space-y-8">
         {/* Current Plan */}
-        <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-medium text-slate-900 dark:text-white">
+        <div className="p-6 rounded-xl bg-slate-50 dark:bg-slate-800">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-lg font-medium text-slate-900 dark:text-white">
               Nuvarande plan
             </h4>
-            <Badge variant={subscription.plan_id === "free" ? "secondary" : "default"}>
+            <Badge variant={subscription.plan_id === "free" ? "secondary" : "default"} className="text-sm px-3 py-1">
               {currentPlan?.name}
             </Badge>
           </div>
-          <p className="text-sm text-muted-foreground mb-3">
+          <p className="text-base text-muted-foreground mb-4">
             {currentPlan?.price === 0
               ? "Gratis"
               : `${currentPlan?.price} kr/månad`}
           </p>
-          <div className="space-y-1">
+          <div className="space-y-2">
             {currentPlan?.features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm">
-                <Check className="h-4 w-4 text-green-500" />
+              <div key={index} className="flex items-center gap-3 text-base">
+                <Check className="h-5 w-5 text-green-500" />
                 <span>{feature}</span>
               </div>
             ))}
@@ -105,11 +107,11 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
 
         {/* Usage */}
         <div>
-          <h4 className="font-medium text-slate-900 dark:text-white mb-2">
+          <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-3">
             Användning denna månad
           </h4>
-          <div className="flex items-center gap-4">
-            <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="flex items-center gap-5">
+            <div className="flex-1 h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-primary rounded-full transition-all"
                 style={{
@@ -122,7 +124,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
                 }}
               />
             </div>
-            <span className="text-sm font-medium">
+            <span className="text-base font-medium">
               {subscription.monthly_uploads_used}/{subscription.monthly_uploads_limit} uploads
             </span>
           </div>
@@ -131,29 +133,28 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         {/* Upgrade Options */}
         {upgradePlans.length > 0 && (
           <div>
-            <h4 className="font-medium text-slate-900 dark:text-white mb-3">
+            <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-4">
               Uppgradera
             </h4>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               {upgradePlans.map((plan) => (
                 <div
                   key={plan.id}
-                  className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg"
+                  className="p-5 border border-slate-200 dark:border-slate-700 rounded-xl"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium">{plan.name}</span>
-                    <span className="text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-lg font-medium">{plan.name}</span>
+                    <span className="text-base text-muted-foreground">
                       {plan.price} kr/mån
                     </span>
                   </div>
                   <Button
-                    size="sm"
-                    className="w-full"
+                    className="w-full text-base"
                     onClick={() => handleUpgrade(plan.id)}
                     disabled={loading !== null}
                   >
                     {loading === plan.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
                       `Välj ${plan.name}`
                     )}
@@ -168,14 +169,15 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         {subscription.stripe_customer_id && (
           <Button
             variant="outline"
+            size="lg"
             onClick={handleManageBilling}
             disabled={loading !== null}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto text-base"
           >
             {loading === "portal" ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (
-              <ExternalLink className="mr-2 h-4 w-4" />
+              <ExternalLink className="mr-2 h-5 w-5" />
             )}
             Hantera fakturering
           </Button>
