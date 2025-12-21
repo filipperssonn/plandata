@@ -50,11 +50,12 @@ export function ExportButtons({ projectId, projectName }: ExportButtonsProps) {
         variant="outline"
         onClick={() => handleExport("pdf")}
         disabled={loading !== null}
+        aria-label="Exportera till PDF"
       >
         {loading === "pdf" ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         ) : (
-          <FileDown className="mr-2 h-4 w-4" />
+          <FileDown className="mr-2 h-4 w-4" aria-hidden="true" />
         )}
         PDF
       </Button>
@@ -62,11 +63,12 @@ export function ExportButtons({ projectId, projectName }: ExportButtonsProps) {
         variant="outline"
         onClick={() => handleExport("excel")}
         disabled={loading !== null}
+        aria-label="Exportera till Excel"
       >
         {loading === "excel" ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         ) : (
-          <FileSpreadsheet className="mr-2 h-4 w-4" />
+          <FileSpreadsheet className="mr-2 h-4 w-4" aria-hidden="true" />
         )}
         Excel
       </Button>
@@ -74,11 +76,12 @@ export function ExportButtons({ projectId, projectName }: ExportButtonsProps) {
         variant="outline"
         onClick={() => handleExport("csv")}
         disabled={loading !== null}
+        aria-label="Exportera till CSV"
       >
         {loading === "csv" ? (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         ) : (
-          <FileText className="mr-2 h-4 w-4" />
+          <FileText className="mr-2 h-4 w-4" aria-hidden="true" />
         )}
         CSV
       </Button>

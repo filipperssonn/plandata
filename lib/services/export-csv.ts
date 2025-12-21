@@ -10,6 +10,23 @@ const roomTypeLabels: Record<Room["type"], string> = {
   other: "Övrigt",
 }
 
+// Calculate room summary according to Swedish standard
+function calculateRoomSummary(rooms: Room[], rawData: Record<string, unknown>): string {
+  if (rawData.room_count_summary && typeof rawData.room_count_summary === 'string') {
+    return rawData.room_count_summary
+  }
+
+  const roomCount = rooms.filter(r =>
+    r.type === 'bedroom' || r.type === 'living'
+  ).length
+  const hasKitchen = rooms.some(r => r.type === 'kitchen')
+
+  if (hasKitchen) {
+    return `${roomCount} rum + kök`
+  }
+  return `${roomCount} rum`
+}
+
 // Generate CSV for rooms data only (suitable for Excel import)
 export function generateRoomsCSV(analysis: AnalysisResult, projectName: string): string {
   const lines: string[] = []
@@ -28,6 +45,8 @@ export function generateRoomsCSV(analysis: AnalysisResult, projectName: string):
 // Generate comprehensive CSV with all analysis data
 export function generateAnalysisCSV(analysis: AnalysisResult, projectName: string): string {
   const lines: string[] = []
+  const rawData = analysis.raw_data || {}
+  const roomSummary = calculateRoomSummary(analysis.rooms, rawData)
 
   // Project info
   lines.push("Projekt,Datum")
@@ -36,15 +55,14 @@ export function generateAnalysisCSV(analysis: AnalysisResult, projectName: strin
   // Summary data
   lines.push("")
   lines.push("Kategori,Värde,Enhet")
-  lines.push(`Total yta,${analysis.total_area_sqm},m²`)
-  if (analysis.bta_sqm) lines.push(`BTA,${analysis.bta_sqm},m²`)
+  lines.push(`Bostadstyp,${roomSummary},`)
   if (analysis.boa_sqm) lines.push(`BOA,${analysis.boa_sqm},m²`)
+  lines.push(`Total yta,${analysis.total_area_sqm},m²`)
   if (analysis.wall_length_m) lines.push(`Vägglängd,${analysis.wall_length_m},m`)
   lines.push(`Fönster,${analysis.windows},st`)
-  lines.push(`Dörrar,${analysis.doors},st`)
+  lines.push(`Dörrar totalt,${analysis.doors},st`)
 
   // Door types from raw_data (if available)
-  const rawData = analysis.raw_data || {}
   if (rawData.doors_inner || rawData.doors_balcony || rawData.doors_exterior) {
     lines.push("")
     lines.push("Dörrtyp,Antal")

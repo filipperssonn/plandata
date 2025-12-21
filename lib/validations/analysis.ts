@@ -18,6 +18,7 @@ export const RoomSchema = z.object({
 
 export const AIAnalysisResponseSchema = z.object({
   rooms: z.array(RoomSchema).min(1),
+  room_count_summary: z.string().optional(),
   windows: z.number().int().min(0).max(100),
   doors: z.number().int().min(0).max(100),
   doors_inner: z.number().int().min(0).max(50).optional(),

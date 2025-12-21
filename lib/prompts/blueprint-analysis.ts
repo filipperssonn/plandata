@@ -5,8 +5,27 @@ Analysera den bifogade ritningen STEG FÖR STEG:
 ## STEG 1 - IDENTIFIERA RUM
 Gå igenom ritningen systematiskt. För varje rum, identifiera:
 - Namn (t.ex. "Sovrum 1", "Kök", "Vardagsrum")
-- Typ: bedroom, kitchen, bathroom, living, hallway, storage, eller other
+- Typ - VÄLJ EXAKT EN av följande:
+  * bedroom - Sovrum, gästrum, master bedroom
+  * kitchen - Kök, pentry (om fullt utrustat)
+  * bathroom - Badrum, WC, toalett, duschrum
+  * living - Vardagsrum, allrum, TV-rum
+  * hallway - Hall, entré, korridor
+  * storage - Förråd, klädvård, garderob (separat rum)
+  * other - Balkong, uteplats, tvättstuga, annat
 - Uppskattad area i m²
+
+VIKTIGT: Var konsekvent med typerna. Ett "WC" är ALLTID "bathroom", aldrig "other". En balkong är ALLTID "other".
+
+## STEG 1.5 - BERÄKNA RUMSRÄKNING
+Räkna antal rum enligt svensk bostadsstandard:
+- RUM = Endast sovrum (bedroom) och vardagsrum (living)
+- Kök (kitchen) räknas SEPARAT
+- RÄKNAS INTE SOM RUM: Balkong, förråd, hall, WC, badrum
+
+Skapa en sammanfattning i formatet "X rum + kök" (t.ex. "3 rum + kök").
+Om det finns 2 sovrum + 1 vardagsrum + kök = "3 rum + kök"
+Om det inte finns kök, skriv bara "X rum" (t.ex. "2 rum")
 
 ## STEG 2 - RÄKNA FÖNSTER
 Gå igenom ritningen från VÄNSTER till HÖGER, rum för rum.
@@ -51,6 +70,7 @@ Returnera ENDAST JSON i detta format (inga förklaringar före eller efter):
   "rooms": [
     { "name": "Rumsnamn", "type": "bedroom|kitchen|bathroom|living|hallway|storage|other", "area_sqm": 12.5 }
   ],
+  "room_count_summary": "3 rum + kök",
   "windows": 8,
   "doors": 4,
   "doors_inner": 2,

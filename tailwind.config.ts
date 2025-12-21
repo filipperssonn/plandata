@@ -40,7 +40,7 @@ const config: Config = {
         },
         muted: {
           DEFAULT: "#f1f5f9",
-          foreground: "#64748b",
+          foreground: "#475569",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

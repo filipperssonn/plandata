@@ -22,10 +22,10 @@ export function Pricing() {
           {PRICING_PLANS.map((plan) => (
             <Card
               key={plan.id}
-              className={`relative flex flex-col dark:bg-slate-800 ${
+              className={`relative flex flex-col dark:bg-slate-800 transition-shadow duration-300 hover:shadow-xl ${
                 plan.highlighted
                   ? "border-primary dark:border-accent border-2 shadow-xl"
-                  : "border-slate-200 dark:border-slate-700"
+                  : "border-slate-200 dark:border-slate-700 shadow-sm"
               }`}
             >
               {plan.highlighted && (
@@ -61,12 +61,7 @@ export function Pricing() {
                 <Link href={`/register?plan=${plan.id}`} className="w-full">
                   <Button
                     size="lg"
-                    className={`w-full text-base font-semibold py-6 ${
-                      plan.highlighted
-                        ? "shadow-lg hover:shadow-xl transition-shadow"
-                        : ""
-                    }`}
-                    variant={plan.highlighted ? "default" : "outline"}
+                    className="w-full text-base font-semibold py-6 bg-primary hover:bg-primary/90 text-white dark:bg-primary dark:hover:bg-primary/90 transition-transform duration-200 hover:scale-105"
                   >
                     {plan.cta}
                   </Button>

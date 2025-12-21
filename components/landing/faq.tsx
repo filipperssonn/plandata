@@ -7,8 +7,25 @@ import {
 import { FAQ_ITEMS } from "@/lib/constants"
 
 export function FAQ() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  }
+
   return (
     <section className="section-padding bg-slate-50 dark:bg-slate-900 transition-colors">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">

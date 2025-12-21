@@ -34,12 +34,22 @@
 
 Att undersöka 21/12:
 
-- ta bort BTA informationen då den inte hjälper för något.
+- ✅ ta bort BTA informationen då den inte hjälper för något. (BTA nedprioriterad - BOA och Total yta visas först)
 
-- Hitta något sett att förbättra ai-modellen, via prompt exempelvis.
+- ✅ Hitta något sett att förbättra ai-modellen, via prompt exempelvis. (Prompten förbättrad med tydligare instruktioner)
 
-- Balkong/förvaring/hall/WC/kök räknas just nu som rum. Detta ska inte räknas som det utan formatet ska vara antal rum (vardagsrum/sovrum) + kök
+- ✅ Balkong/förvaring/hall/WC/kök räknas just nu som rum. Detta ska inte räknas som det utan formatet ska vara antal rum (vardagsrum/sovrum) + kök (room_count_summary implementerat)
 
-- Total yta inte lika viktigt, boyta är viktigare.
+- ✅ Total yta inte lika viktigt, boyta är viktigare. (BOA visas nu först i UI och export)
 
-- Se till att all data som visas i projektet även kommer med i CSV/EXCEL/PDF.
+- ✅ Se till att all data som visas i projektet även kommer med i CSV/EXCEL/PDF. (Dörrtyper och rumsräkning tillagt)
+
+- ✅ Fixa CTA-knapparna så att dom har primärfärgen på priskomponenten. Behåll stöd för darkmode.
+
+I Vercel:
+
+- Fixa så att stripe integrationen fungerar.
+
+- ✅ Kontrollera all funktionalitet så att dom inte pekar på localhost (localhost-fallback borttagen)
+
+- ✅ Säkerställ att all text har både light och dark mode styling. (social-proof.tsx uppdaterad)

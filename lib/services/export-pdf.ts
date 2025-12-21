@@ -11,6 +11,23 @@ const ROOM_TYPE_LABELS: Record<string, string> = {
   other: "Övrigt",
 }
 
+// Calculate room summary according to Swedish standard
+function calculateRoomSummary(rooms: AnalysisResult['rooms'], rawData: Record<string, unknown>): string {
+  if (rawData.room_count_summary && typeof rawData.room_count_summary === 'string') {
+    return rawData.room_count_summary
+  }
+
+  const roomCount = rooms.filter(r =>
+    r.type === 'bedroom' || r.type === 'living'
+  ).length
+  const hasKitchen = rooms.some(r => r.type === 'kitchen')
+
+  if (hasKitchen) {
+    return `${roomCount} rum + kok`
+  }
+  return `${roomCount} rum`
+}
+
 export function generatePDF(
   projectName: string,
   analysis: AnalysisResult
@@ -18,6 +35,13 @@ export function generatePDF(
   const doc = new jsPDF()
   const pageWidth = doc.internal.pageSize.getWidth()
   let y = 20
+
+  // Get door types from raw_data
+  const rawData = analysis.raw_data || {}
+  const doorsInner = (rawData.doors_inner as number) || 0
+  const doorsBalcony = (rawData.doors_balcony as number) || 0
+  const doorsExterior = (rawData.doors_exterior as number) || 0
+  const roomSummary = calculateRoomSummary(analysis.rooms, rawData)
 
   // Title
   doc.setFontSize(24)
@@ -53,13 +77,17 @@ export function generatePDF(
   doc.setFont("helvetica", "normal")
 
   const summaryData = [
-    ["Total yta", analysis.total_area_sqm ? `${analysis.total_area_sqm} m²` : "-"],
-    ["BTA (Bruttoarea)", analysis.bta_sqm ? `${analysis.bta_sqm} m²` : "-"],
+    ["Bostadstyp", roomSummary],
     ["BOA (Boarea)", analysis.boa_sqm ? `${analysis.boa_sqm} m²` : "-"],
+    ["Total yta", analysis.total_area_sqm ? `${analysis.total_area_sqm} m²` : "-"],
     ["Vägglängd", analysis.wall_length_m ? `${analysis.wall_length_m} m` : "-"],
     ["Antal fönster", String(analysis.windows)],
-    ["Antal dörrar", String(analysis.doors)],
-    ["Antal rum", String(analysis.rooms.length)],
+    ["", ""],
+    ["Dörrar", ""],
+    ["  Innerdörrar", String(doorsInner)],
+    ["  Balkongdörr", String(doorsBalcony)],
+    ["  Ytterdörr", String(doorsExterior)],
+    ["  Totalt", String(analysis.doors)],
   ]
 
   summaryData.forEach(([label, value]) => {

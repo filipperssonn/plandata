@@ -33,36 +33,70 @@ function getDoorTypes(rawData: Record<string, unknown>) {
   }
 }
 
+// Calculate room summary according to Swedish standard
+function calculateRoomSummary(rooms: Room[], rawData: Record<string, unknown>): string {
+  // First check if AI provided a summary
+  if (rawData.room_count_summary && typeof rawData.room_count_summary === 'string') {
+    return rawData.room_count_summary
+  }
+
+  // Calculate manually: only bedroom and living count as "rum"
+  const roomCount = rooms.filter(r =>
+    r.type === 'bedroom' || r.type === 'living'
+  ).length
+  const hasKitchen = rooms.some(r => r.type === 'kitchen')
+
+  if (hasKitchen) {
+    return `${roomCount} rum + kök`
+  }
+  return `${roomCount} rum`
+}
+
 export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
   const doorTypes = getDoorTypes(analysis.raw_data)
+  const roomSummary = calculateRoomSummary(analysis.rooms, analysis.raw_data)
 
   const stats = [
     {
+      label: "BOA",
+      value: analysis.boa_sqm ? `${analysis.boa_sqm} m²` : "-",
+      icon: Square,
+    },
+    {
       label: "Total yta",
-      value: `${analysis.total_area_sqm} m²`,
+      value: analysis.total_area_sqm ? `${analysis.total_area_sqm} m²` : "-",
       icon: Maximize,
     },
     {
-      label: "BTA",
-      value: `${analysis.bta_sqm} m²`,
-      icon: Square,
-    },
-    {
-      label: "BOA",
-      value: `${analysis.boa_sqm} m²`,
-      icon: Square,
-    },
-    {
       label: "Vägglängd",
-      value: `${analysis.wall_length_m} m`,
+      value: analysis.wall_length_m ? `${analysis.wall_length_m} m` : "-",
       icon: Ruler,
     },
   ]
 
   return (
     <div className="space-y-6">
+      {/* Room Summary */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-teal-100 dark:bg-teal-900/30 rounded-lg">
+                <Home className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+              </div>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">
+                Bostadstyp
+              </span>
+            </div>
+            <span className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+              {roomSummary}
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-4">
@@ -164,7 +198,7 @@ export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Home className="h-5 w-5" />
-            Rum ({analysis.rooms.length})
+            Rumsöversikt
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -172,13 +206,13 @@ export function AnalysisDisplay({ analysis }: AnalysisDisplayProps) {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-700">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                  <th scope="col" className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
                     Rum
                   </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                  <th scope="col" className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
                     Typ
                   </th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">
+                  <th scope="col" className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">
                     Yta
                   </th>
                 </tr>
