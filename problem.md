@@ -46,10 +46,18 @@ Att undersöka 21/12:
 
 - ✅ Fixa CTA-knapparna så att dom har primärfärgen på priskomponenten. Behåll stöd för darkmode.
 
-I Vercel:
-
-- Fixa så att stripe integrationen fungerar.
+<!-- - Fixa så att stripe integrationen fungerar. -->
 
 - ✅ Kontrollera all funktionalitet så att dom inte pekar på localhost (localhost-fallback borttagen)
 
 - ✅ Säkerställ att all text har både light och dark mode styling. (social-proof.tsx uppdaterad)
+
+I plandata.se:
+
+- ✅ Kunde inte exportera analys varken som PDF/Excel/CSV fil. (CSV returnerar nu fullständig analys istället för bara rum-data, dörrcheck fixad)
+
+- ✅ Den visar fortfarande inte rätt mängd dörrar i analysen. (Dörrfält ändrade från optional till default(0) i validering, export-villkor fixade)
+
+- ✅ Säkerställ att det finns funktionalitet för att restriktera användare från att ladda upp till AI-analysen om dom överskrider sitt maxantal uploads denna månad. (Gränskontroll tillagd i analyze API + Edge Function för månadlig reset)
+
+- Undersök "Admin" funktionalitet med möjlighet för toggle av/på openrouter key samt val av modell. (Skippas för nu)

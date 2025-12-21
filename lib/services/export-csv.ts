@@ -63,12 +63,12 @@ export function generateAnalysisCSV(analysis: AnalysisResult, projectName: strin
   lines.push(`Dörrar totalt,${analysis.doors},st`)
 
   // Door types from raw_data (if available)
-  if (rawData.doors_inner || rawData.doors_balcony || rawData.doors_exterior) {
+  if (rawData.doors_inner !== undefined || rawData.doors_balcony !== undefined || rawData.doors_exterior !== undefined) {
     lines.push("")
     lines.push("Dörrtyp,Antal")
-    if (rawData.doors_inner) lines.push(`Innerdörrar,${rawData.doors_inner}`)
-    if (rawData.doors_balcony) lines.push(`Balkongdörr,${rawData.doors_balcony}`)
-    if (rawData.doors_exterior) lines.push(`Ytterdörr,${rawData.doors_exterior}`)
+    if (rawData.doors_inner !== undefined) lines.push(`Innerdörrar,${rawData.doors_inner}`)
+    if (rawData.doors_balcony !== undefined) lines.push(`Balkongdörr,${rawData.doors_balcony}`)
+    if (rawData.doors_exterior !== undefined) lines.push(`Ytterdörr,${rawData.doors_exterior}`)
   }
 
   // Rooms
@@ -81,8 +81,7 @@ export function generateAnalysisCSV(analysis: AnalysisResult, projectName: strin
   return lines.join("\n")
 }
 
-// Legacy function for backward compatibility
+// Main export function - returns comprehensive analysis CSV
 export function generateCSV(analysis: AnalysisResult, projectName: string): string {
-  // Return the rooms-only CSV as the main export format
-  return generateRoomsCSV(analysis, projectName)
+  return generateAnalysisCSV(analysis, projectName)
 }

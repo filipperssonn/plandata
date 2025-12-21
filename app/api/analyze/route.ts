@@ -24,6 +24,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    // Kontrollera upload-gräns FÖRE analys
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("monthly_uploads_used, monthly_uploads_limit")
+      .eq("user_id", user.id)
+      .single()
+
+    if (subscription && subscription.monthly_uploads_used >= subscription.monthly_uploads_limit) {
+      return NextResponse.json(
+        { error: "Du har nått din månadsgräns för analyser. Uppgradera din plan för fler." },
+        { status: 429 }
+      )
+    }
+
     const { data: project } = await supabase
       .from("projects")
       .select("*, project_files(*)")
