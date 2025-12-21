@@ -21,7 +21,7 @@ export function FAQ() {
   }
 
   return (
-    <section className="section-padding bg-slate-50 dark:bg-slate-900 transition-colors">
+    <section id="faq" className="section-padding bg-slate-50 dark:bg-slate-900 transition-colors">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

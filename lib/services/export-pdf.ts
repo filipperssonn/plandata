@@ -77,20 +77,32 @@ export function generatePDF(
   doc.setFont("helvetica", "normal")
 
   const summaryData = [
-    ["Bostadstyp", roomSummary],
-    ["BOA (Boarea)", analysis.boa_sqm ? `${analysis.boa_sqm} m²` : "-"],
-    ["Total yta", analysis.total_area_sqm ? `${analysis.total_area_sqm} m²` : "-"],
-    ["Vägglängd", analysis.wall_length_m ? `${analysis.wall_length_m} m` : "-"],
-    ["Antal fönster", String(analysis.windows)],
-    ["", ""],
-    ["Dörrar", ""],
-    ["  Innerdörrar", String(doorsInner)],
-    ["  Balkongdörr", String(doorsBalcony)],
-    ["  Ytterdörr", String(doorsExterior)],
-    ["  Totalt", String(analysis.doors)],
+    { label: "Bostadstyp", value: roomSummary },
+    { label: "BOA (Boarea)", value: analysis.boa_sqm ? `${analysis.boa_sqm} m²` : "-" },
+    { label: "Total yta", value: analysis.total_area_sqm ? `${analysis.total_area_sqm} m²` : "-" },
+    { label: "Vägglängd", value: analysis.wall_length_m ? `${analysis.wall_length_m} m` : "-" },
+    { label: "Antal fönster", value: String(analysis.windows) },
   ]
 
-  summaryData.forEach(([label, value]) => {
+  summaryData.forEach(({ label, value }) => {
+    doc.text(label + ":", 20, y)
+    doc.text(value, 80, y)
+    y += 7
+  })
+
+  // Dörrar section
+  y += 3
+  doc.text("Dörrar:", 20, y)
+  y += 7
+
+  const doorData = [
+    { label: "  Innerdörrar", value: String(doorsInner) },
+    { label: "  Balkongdörr", value: String(doorsBalcony) },
+    { label: "  Ytterdörr", value: String(doorsExterior) },
+    { label: "  Totalt", value: String(analysis.doors) },
+  ]
+
+  doorData.forEach(({ label, value }) => {
     doc.text(label + ":", 20, y)
     doc.text(value, 80, y)
     y += 7

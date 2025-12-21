@@ -38,19 +38,34 @@ Räkna varje fönster individuellt - ett dubbelfönster är fortfarande ETT fön
 Lista var varje fönster finns (t.ex. "Sovrum: 2, Vardagsrum: 3").
 
 ## STEG 3 - RÄKNA DÖRRAR (per typ)
-Kategorisera varje dörr:
+VIKTIGT: Dörrar visas på ritningar som en båge/arc som visar dörrens öppningsriktning. Leta efter:
+- En linje med en kvartscirkel/båge som visar hur dörren svänger
+- Öppningar i väggar med dörrmarkering
+- Text som "D" eller dörrbredder (t.ex. "9M", "10M")
 
-**Innerdörrar** - Dörrar MELLAN rum inuti bostaden
-- Syns som öppningar i innerväggar med dörrbåge markerad
-- Räkna bara dörrar som leder från ett rum till ett annat rum
+Gå igenom VARJE rum och räkna dörrar som leder IN eller UT från rummet.
 
-**Balkongdörr** - Dörr till balkong eller uteplats
-- Ofta bredare än vanliga dörrar
-- Kan ha glasparti markerat
+**Innerdörrar** (doors_inner) - Dörrar MELLAN rum inuti bostaden
+- Dörr från Hall till Sovrum = 1 innerdörr
+- Dörr från Hall till Badrum = 1 innerdörr
+- Dörr från Hall till Kök = 1 innerdörr (om det finns dörr, inte öppen planlösning)
+- Dörr till klädkammare/förråd = 1 innerdörr
+- RÄKNA VARJE DÖRR SOM LEDER MELLAN TVÅ RUM
 
-**Ytterdörr** - Huvudentré/lägenhetsdörr
-- Dörr som leder UT från bostaden (till trapphus, etc.)
-- Oftast bara EN per bostad
+**Balkongdörr** (doors_balcony) - Dörr till balkong eller uteplats
+- Leder från ett rum (oftast vardagsrum) till balkong
+- Ofta bredare än vanliga dörrar, kan vara pardörr
+- Om balkongen är åtkomlig = minst 1 balkongdörr
+
+**Ytterdörr** (doors_exterior) - Huvudentré/lägenhetsdörr
+- Dörr som leder UT från bostaden till trapphus/utomhus
+- Oftast placerad vid hallen/entrén
+- Vanligtvis EXAKT 1 per lägenhet
+
+EXEMPEL: En 3-rumslägenhet har typiskt:
+- 1 ytterdörr (till trapphus)
+- 1 balkongdörr (till balkong)
+- 5-7 innerdörrar (till sovrum, badrum, kök, förråd, etc.)
 
 ## STEG 4 - AREOR
 - **total_area_sqm**: Summan av alla rums golvyta
@@ -60,7 +75,10 @@ Kategorisera varje dörr:
 ## STEG 5 - VERIFIERA
 Innan du svarar, dubbelkolla:
 - Har du räknat ALLA fönster? Gå igenom en gång till.
-- Har du kategoriserat dörrarna rätt?
+- DÖRRAR: Kontrollera att doors_inner + doors_balcony + doors_exterior = doors (totalt)
+- DÖRRAR: Om du har balkong i rumslistan MÅSTE doors_balcony vara minst 1
+- DÖRRAR: doors_exterior bör vara minst 1 (varje bostad har en ytterdörr)
+- DÖRRAR: Varje rum (utom öppna ytor) har normalt minst en dörr
 - Stämmer summan av rummens area ungefär med total_area?
 
 ---
