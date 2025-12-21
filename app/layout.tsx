@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -68,6 +69,11 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  icons: {
+    icon: "/plandata-icon.svg",
+    shortcut: "/plandata-icon.svg",
+    apple: "/plandata-icon.svg",
+  },
 }
 
 export default function RootLayout({
@@ -101,7 +107,9 @@ export default function RootLayout({
           >
             Hoppa till huvudinnehåll
           </a>
-          <Header />
+          <Suspense fallback={<div className="h-16 border-b bg-background" />}>
+            <Header />
+          </Suspense>
           <main id="main-content">{children}</main>
           <Footer />
         </ThemeProvider>
