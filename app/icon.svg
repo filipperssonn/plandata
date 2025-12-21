@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Plandata Icon Only - For favicon and small usage -->
+  <g transform="translate(4, 4)">
+    <!-- Outer frame -->
+    <rect x="0" y="0" width="40" height="40" rx="4" fill="none" stroke="#0f766e" stroke-width="2.5"/>
+    
+    <!-- Inner room divisions -->
+    <line x1="0" y1="20" x2="25" y2="20" stroke="#0f766e" stroke-width="2"/>
+    <line x1="25" y1="0" x2="25" y2="28" stroke="#0f766e" stroke-width="2"/>
+    
+    <!-- Door opening (gap in wall) -->
+    <line x1="25" y1="32" x2="25" y2="40" stroke="#0f766e" stroke-width="2"/>
+    
+    <!-- Window indicators -->
+    <rect x="8" y="0" width="8" height="2.5" fill="#14b8a6"/>
+    <rect x="37.5" y="10" width="2.5" height="8" fill="#14b8a6"/>
+    
+    <!-- Small room marker -->
+    <circle cx="12" cy="30" r="2" fill="#14b8a6"/>
+    <circle cx="32" cy="12" r="2" fill="#14b8a6"/>
+  </g>
+</svg>
+
+

@@ -138,10 +138,10 @@ export const FAQ_ITEMS: FAQItem[] = [
     question: "Vilka filformat stöds?",
     answer: "Vi stöder PDF (rekommenderat), PNG och JPEG. För bäst resultat, använd PDF-filer direkt från CAD-program eller skannade ritningar med hög upplösning.",
   },
-  {
-    question: "Hur exakt är AI:n?",
-    answer: "Vår AI har över 90% träffsäkerhet på rumsidentifiering och ytberäkning. Du kan alltid granska och justera resultaten innan export.",
-  },
+  // {
+  //   question: "Hur exakt är AI:n?",
+  //   answer: "Vår AI har över 90% träffsäkerhet på rumsidentifiering och ytberäkning. Du kan alltid granska och justera resultaten innan export.",
+  // },
   {
     question: "Kan jag använda Plandata för alla typer av ritningar?",
     answer: "Plandata är optimerat för svenska bygglovsritningar och planritningar. Det fungerar bäst för bostäder, kontor och mindre kommersiella byggnader.",

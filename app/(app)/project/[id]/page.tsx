@@ -56,9 +56,18 @@ export default async function ProjectPage({
     .eq("project_id", id)
     .single()
 
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id", user.id)
+    .single()
+
   const typedProject = project as Project
   const status = statusConfig[typedProject.status]
   const StatusIcon = status.icon
+  const isAtLimit = subscription 
+    ? subscription.monthly_uploads_used >= subscription.monthly_uploads_limit 
+    : false
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -107,11 +116,31 @@ export default async function ProjectPage({
       {typedProject.status === "pending" && (
         <Card>
           <CardContent className="py-12 text-center">
-            <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Väntar på analys</h3>
-            <p className="text-muted-foreground">
-              Din ritning väntar på att analyseras. Detta tar normalt under en minut.
-            </p>
+            {isAtLimit ? (
+              <>
+                <XCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
+                <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Du har nått din maxgräns denna månad</h3>
+                <p className="text-muted-foreground mb-6">
+                  Du har utnyttjat alla analyser som ingår i din nuvarande plan. Uppgradera för att fortsätta analysera ritningar.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Link href="/settings">
+                    <Button>Hantera prenumeration</Button>
+                  </Link>
+                  <Link href="/new-project">
+                    <Button variant="outline">Ladda upp annan fil</Button>
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Väntar på analys</h3>
+                <p className="text-muted-foreground">
+                  Din ritning väntar på att analyseras. Detta tar normalt under en minut.
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       )}
@@ -133,12 +162,21 @@ export default async function ProjectPage({
           <CardContent className="py-12 text-center">
             <XCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
             <h3 className="text-lg font-medium mb-2 text-slate-900 dark:text-white">Analysen misslyckades</h3>
-            <p className="text-muted-foreground mb-4">
-              Något gick fel vid analysen. Kontrollera att ritningen är tydlig och i rätt format.
+            <p className="text-muted-foreground mb-6">
+              {isAtLimit 
+                ? "Du har nått din månadsgräns för analyser. Uppgradera din plan för att kunna köra fler analyser."
+                : "Något gick fel vid analysen. Kontrollera att ritningen är tydlig och i rätt format."}
             </p>
-            <Link href="/new-project">
-              <Button>Försök igen med ny fil</Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {isAtLimit && (
+                <Link href="/settings">
+                  <Button>Hantera prenumeration</Button>
+                </Link>
+              )}
+              <Link href="/new-project">
+                <Button variant={isAtLimit ? "outline" : "default"}>Försök igen med ny fil</Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       )}

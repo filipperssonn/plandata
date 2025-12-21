@@ -8,7 +8,11 @@
       "Bash(timeout 5 bash:*)",
       "Bash(cat:*)",
       "Bash(curl:*)",
-      "Bash(xargs cat:*)"
+      "Bash(xargs cat:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)"
     ]
   }
 }

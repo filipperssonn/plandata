@@ -93,7 +93,7 @@ export default function NewProjectPage() {
       }
 
       // Trigger AI analysis
-      await fetch("/api/analyze", {
+      const analyzeRes = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,6 +101,16 @@ export default function NewProjectPage() {
           scale: scale.trim() || undefined
         }),
       })
+
+      if (!analyzeRes.ok) {
+        const errorData = await analyzeRes.json()
+        
+        // Clean up: delete project file and project since analysis failed
+        await supabase.storage.from("blueprints").remove([filePath])
+        await supabase.from("projects").delete().eq("id", project.id)
+        
+        throw new Error(errorData.error || "Misslyckades att påbörja analysen")
+      }
 
       // Redirect to project page
       router.push(`/project/${project.id}`)

@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { signIn } from "@/app/actions/auth"
+import { signIn, resendConfirmationEmail } from "@/app/actions/auth"
 import { Loader2 } from "lucide-react"
 
 function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [resendSuccess, setResendSuccess] = useState<string | null>(null)
+  const [resendLoading, setResendLoading] = useState(false)
   const searchParams = useSearchParams()
   const redirect = searchParams.get("redirect")
   const urlError = searchParams.get("error")
@@ -34,6 +36,31 @@ function LoginForm() {
     }
   }
 
+  async function handleResendConfirmation() {
+    const email = (document.getElementById('email') as HTMLInputElement)?.value
+    if (!email) {
+      setError('Ange din e-postadress först')
+      return
+    }
+
+    setResendLoading(true)
+    setResendSuccess(null)
+    setError(null)
+
+    const formData = new FormData()
+    formData.append('email', email)
+
+    const result = await resendConfirmationEmail(formData)
+
+    if (result?.error) {
+      setError(result.error)
+    } else if (result?.success) {
+      setResendSuccess(result.success)
+    }
+
+    setResendLoading(false)
+  }
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -47,6 +74,37 @@ function LoginForm() {
           {(error || urlError) && (
             <Alert variant="destructive">
               <AlertDescription>{error || urlError}</AlertDescription>
+            </Alert>
+          )}
+
+          {resendSuccess && (
+            <Alert>
+              <AlertDescription>{resendSuccess}</AlertDescription>
+            </Alert>
+          )}
+
+          {error && error.includes('Email not confirmed') && (
+            <Alert>
+              <AlertDescription className="flex flex-col gap-2">
+                <span>Ditt konto är inte verifierat ännu.</span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResendConfirmation}
+                  disabled={resendLoading}
+                  className="w-full"
+                >
+                  {resendLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Skickar...
+                    </>
+                  ) : (
+                    'Skicka bekräftelsemejl igen'
+                  )}
+                </Button>
+              </AlertDescription>
             </Alert>
           )}
 
